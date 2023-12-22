@@ -28,44 +28,71 @@ vim.opt.ignorecase = true
 vim.opt.mouse = "a"
 vim.opt.completeopt = "menu,menuone,preview"
 vim.opt.termguicolors = true 
-vim.g.R_user_maps_only = 1 --only use my keymap in nvim-R
-vim.g.jukit_shell_cmd = 'ipython3' --jukit terminal
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+
+
+
 
 --------------------
 --Keys mapping------
 --------------------
+print("hello")
+--nvim-python-repl plugins config--
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-  pattern = {"*.R",},
+  pattern = {"*.py","*.R",},
   callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<Leader>os', '<Plug>RStart', {})
-    vim.api.nvim_buf_set_keymap(0, 'v', '<Leader>or', '<Plug>RStart', {})
-    vim.api.nvim_buf_set_keymap(0, 'n', '<Leader>f', '<Plug>RDSendLine', {})
-    vim.api.nvim_buf_set_keymap(0, 'v', '<Leader>f', '<Plug>RDSendSelection', { noremap = true, silent = true })
+	vim.keymap.set("n", '<CR>', function() 
+        require('nvim-python-repl').send_statement_definition() 
+    end, {noremap = true})
+	vim.keymap.set("v", '<CR>', function() 
+        require('nvim-python-repl').send_visual_to_repl() 
+    end, {noremap = true})
+	vim.keymap.set("n", '<leader>fa', function() 
+        require('nvim-python-repl').send_buffer_to_repl() 
+    end, {noremap = true})
 end})
 
-vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-  pattern = {"*.py",},
-  callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'n', '<Leader>os', ':call jukit#splits#output()<cr>', {})
-    vim.api.nvim_buf_set_keymap(0, 'n', '<Leader>f', ':call jukit#send#line()<cr>', {})
-    vim.api.nvim_buf_set_keymap(0, 'v', '<Leader>f', ':<C-U>call jukit#send#selection()<cr>', {})
-end})
-
+--nvim tree config--
 vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', {noremap = true})
+vim.api.nvim_set_keymap("n", "<CR>", ":lua api.node.open.edit('Open')<CR>", {noremap = true})
 
+--nvim buffer/terminal_buffer config--
 vim.api.nvim_set_keymap('n', '<leader>p', ':bprev<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>n', ':bnext<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', ':terminal<CR>', { noremap = true })
+
+--noice config--
+vim.keymap.set("n", "<leader>nh", function()
+  require("noice").cmd("history")
+end)
+vim.keymap.set("n", "<leader>nd", function()
+  require("noice").cmd("dismiss")
+end)
+
+
+
+
+
+
 
 
 
 --------------------
 --lspconfig---------
 --------------------
-require'lspconfig'.pyright.setup{}
+require'lspconfig'.pyright.setup{
+  capabilities = capabilities,
+  handlers = {
+    ["textDocument/publishDiagnostics"] = function() end,
+  },
+}
 require'lspconfig'.r_language_server.setup{}
 
 --------------------
 --Color theme------
 --------------------
 vim.cmd("colorscheme carbonfox")
+
+

@@ -17,7 +17,7 @@ return{ "EdenEast/nightfox.nvim" ,
       },
     },
     styles = {               -- Style to be applied to different syntax groups
-      comments = "NONE",     -- Value is any valid attr-list value `:help attr-list`
+      comments = "italic",     -- Value is any valid attr-list value `:help attr-list`
       conditionals = "NONE",
       constants = "NONE",
       functions = "NONE",
@@ -34,10 +34,20 @@ return{ "EdenEast/nightfox.nvim" ,
       search = false,
     },
     modules = {             -- List of various plugins and additional options
-      -- ...
+        cmp = true,
+        diagnostic = true,
+        lsp_trouble = true,
+        gitsigns = true,
+        modes = true,
+        native_lsp = true,
+        neogit = true,
+        nvimtree = true,
+        telescope = true,
+        treesitter = true,
+        whichkey = true,
     },
   },
-  palettes = {},
+  palettes = {carbonfox = {bg3 = "#25EAFF"},},
   specs = {},
-  groups = {},
+  groups = {CursorLine = { bg = 'bg3'},Comment = { style = "italic" },}
 }

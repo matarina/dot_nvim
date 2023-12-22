@@ -79,13 +79,6 @@ return {
 	  table.insert(config.sections.lualine_x, component)
 	end
 
-	ins_left {
-	  function()
-	    return '▊'
-	  end,
-	  color = { fg = colors.blue }, -- Sets highlighting of component
-	  padding = { left = 0, right = 1 }, -- We don't need space before this
-	}
 
 	ins_left {
 	  -- mode component
@@ -118,7 +111,7 @@ return {
 	    }
 	    return { fg = mode_color[vim.fn.mode()] }
 	  end,
-	  padding = { right = 1 },
+	  padding = { right = 1, left = 1},
 	}
 
 	ins_left {
@@ -133,20 +126,11 @@ return {
 	  color = { fg = colors.magenta, gui = 'bold' },
 	}
 
-	ins_left { 'location' }
+	ins_left { 'progress', color = { fg = colors.fg, gui = 'italic' } }
 
-	ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+	ins_left { 'searchcount', color = { fg = '#FDA900', gui = 'bold' },}
 
-	ins_left {
-	  'diagnostics',
-	  sources = { 'nvim_diagnostic' },
-	  symbols = { error = ' ', warn = ' ', info = ' ' },
-	  diagnostics_color = {
-	    color_error = { fg = colors.red },
-	    color_warn = { fg = colors.yellow },
-	    color_info = { fg = colors.cyan },
-	  },
-	}
+
 
 	-- Insert mid section. You can make any number of sections in neovim :)
 	-- for lualine it's any number greater then 2
@@ -156,10 +140,10 @@ return {
 	  end,
 	}
 
-	ins_left {
+	ins_right {
 	  -- Lsp server name .
 	  function()
-	    local msg = 'No Active Lsp'
+	    local msg = 'Inactive'
 	    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
 	    local clients = vim.lsp.get_active_clients()
 	    if next(clients) == nil then
@@ -173,8 +157,8 @@ return {
 	    end
 	    return msg
 	  end,
-	  icon = ' LSP:',
-	  color = { fg = '#ffffff', gui = 'bold' },
+	  icon = ' :',
+	  color = { fg = '#FFFFFF', gui = 'bold' },
 	}
 
 	-- Add components to right sections
@@ -182,41 +166,16 @@ return {
 	  'o:encoding', -- option component same as &encoding in viml
 	  fmt = string.upper, -- I'm not sure why it's upper case either ;)
 	  cond = conditions.hide_in_width,
-	  color = { fg = colors.green, gui = 'bold' },
+	  color = { fg = colors.green, gui = 'italic' },
 	}
 
 	ins_right {
 	  'fileformat',
 	  fmt = string.upper,
 	  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-	  color = { fg = colors.green, gui = 'bold' },
+	  color = { fg = colors.green, gui = 'italic' },
 	}
 
-	ins_right {
-	  'branch',
-	  icon = '',
-	  color = { fg = colors.violet, gui = 'bold' },
-	}
-
-	ins_right {
-	  'diff',
-	  -- Is it me or the symbol for modified us really weird
-	  symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
-	  diff_color = {
-	    added = { fg = colors.green },
-	    modified = { fg = colors.orange },
-	    removed = { fg = colors.red },
-	  },
-	  cond = conditions.hide_in_width,
-	}
-
-	ins_right {
-	  function()
-	    return '▊'
-	  end,
-	  color = { fg = colors.blue },
-	  padding = { left = 1 },
-	}
 
 	-- Now don't forget to initialize lualine
 	require('lualine').setup(config)
