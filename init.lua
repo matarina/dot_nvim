@@ -38,19 +38,18 @@ vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
 --------------------
 --Keys mapping------
 --------------------
-print("hello")
---nvim-python-repl plugins config--
+--nvim_ds_repl plugins config--
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   pattern = {"*.py","*.R",},
   callback = function()
 	vim.keymap.set("n", '<CR>', function() 
-        require('nvim-python-repl').send_statement_definition() 
+        require('nvim_ds_repl').send_statement_definition() 
     end, {noremap = true})
 	vim.keymap.set("v", '<CR>', function() 
-        require('nvim-python-repl').send_visual_to_repl() 
+        require('nvim_ds_repl').send_visual_to_repl() 
     end, {noremap = true})
 	vim.keymap.set("n", '<leader>fa', function() 
-        require('nvim-python-repl').send_buffer_to_repl() 
+        require('nvim_ds_repl').send_buffer_to_repl() 
     end, {noremap = true})
 end})
 
@@ -96,3 +95,6 @@ require'lspconfig'.r_language_server.setup{}
 vim.cmd("colorscheme carbonfox")
 
 
+--magick
+package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?/init.lua;"
+package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?.lua;"

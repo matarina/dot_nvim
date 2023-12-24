@@ -3,8 +3,7 @@ return {
     dependencies = "nvim-treesitter",
     ft = {"python", "lua"}, 
     config = function()
-        require("nvim-python-repl").setup({
-            execute_on_send = true,
+        require("nvim_ds_repl").setup({
             vsplit = true,
         })
     end
