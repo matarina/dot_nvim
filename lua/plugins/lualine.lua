@@ -7,7 +7,7 @@ return {
   config = function()
 			-- stylua: ignore
 	local colors = {
-	  bg       = '#202328',
+	  bg       = '#151515',
 	  fg       = '#bbc2cf',
 	  yellow   = '#ECBE7B',
 	  cyan     = '#008080',
@@ -19,7 +19,6 @@ return {
 	  blue     = '#51afef',
 	  red      = '#ec5f67',
 	}
-
 	local conditions = {
 	  buffer_not_empty = function()
 	    return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
@@ -80,13 +79,14 @@ return {
 	end
 
 
+
+-----------------------component beblow
 	ins_left {
 	  -- mode component
 	  function()
-	    return ''
+	    return ''
 	  end,
 	  color = function()
-	    -- auto change color according to neovims mode
 	    local mode_color = {
 	      n = colors.red,
 	      i = colors.green,
@@ -109,37 +109,38 @@ return {
 	      ['!'] = colors.red,
 	      t = colors.red,
 	    }
-	    return { fg = mode_color[vim.fn.mode()] }
+	    return { fg = mode_color[vim.fn.mode()], gui = 'bold'}
 	  end,
 	  padding = { right = 1, left = 1},
 	}
-
+----- show filesize
 	ins_left {
-	  -- filesize component
 	  'filesize',
 	  cond = conditions.buffer_not_empty,
 	}
-
+----- show filename
 	ins_left {
 	  'filename',
 	  cond = conditions.buffer_not_empty,
 	  color = { fg = colors.magenta, gui = 'bold' },
 	}
-
-	ins_left { 'progress', color = { fg = colors.fg, gui = 'italic' } }
-
+----- progress percent
+	ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+----- search match count
 	ins_left { 'searchcount', color = { fg = '#FDA900', gui = 'bold' },}
 
 
 
-	-- Insert mid section. You can make any number of sections in neovim :)
-	-- for lualine it's any number greater then 2
+----- middle section
 	ins_left {
 	  function()
 	    return '%='
 	  end,
 	}
 
+
+
+----insert right
 	ins_right {
 	  -- Lsp server name .
 	  function()
@@ -161,20 +162,44 @@ return {
 	  color = { fg = '#FFFFFF', gui = 'bold' },
 	}
 
-	-- Add components to right sections
-	ins_right {
-	  'o:encoding', -- option component same as &encoding in viml
-	  fmt = string.upper, -- I'm not sure why it's upper case either ;)
-	  cond = conditions.hide_in_width,
-	  color = { fg = colors.green, gui = 'italic' },
-	}
 
-	ins_right {
-	  'fileformat',
-	  fmt = string.upper,
-	  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-	  color = { fg = colors.green, gui = 'italic' },
-	}
+
+
+    local function cpu()
+         local a = vim.fn.system("ps -aux | awk '{print $3}' | tail -n+2 | awk '{s+=$1} END {print int(s / 64)}'")
+          str = a:gsub('[%p%c%s]', '')
+          return string.format('%3d',str)
+    end
+    local function memory()
+           local a = vim.fn.system("free -m | awk '/Mem:/ {print  (int($3 / $2 * 100))}'")
+           str = a:gsub('[%p%c%s]', '')
+           return string.format('%2d',str)
+    end
+    local function gpu()
+           local a = vim.fn.system("nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits")
+           str = a:gsub('[%p%c%s]', '')
+           return string.format('%3d',str)
+    end
+	ins_right { 
+	  function()
+	    return ''
+	  end,color = { fg = '#FDA900', gui = 'bold' },padding = 0.001}
+	ins_right {cpu, color = { fg = '#FDA900', gui = 'bold' },padding = {left = 0.1, right = 1}}
+	ins_right { 
+	  function()
+	    return '󱇘'
+	  end,color = { fg = '#FDA900', gui = 'bold' },padding = 0.001}
+	ins_right {memory, color = { fg = '#FDA900', gui = 'bold' },padding = {left = 0.1, right = 1}}
+	ins_right { 
+	  function()
+	    return '󰒆'
+	  end,color = { fg = '#FDA900', gui = 'bold' },padding = 0.001}
+	ins_right {gpu, color = { fg = '#FDA900', gui = 'bold' }, padding = {left = 0.1, right = 0}}
+
+
+
+	ins_right { 'datetime', style = '%a %h-%d %H:%M', color = { fg = '#3A8B83', gui = 'bold' },}
+	-- Add components to right sections
 
 
 	-- Now don't forget to initialize lualine

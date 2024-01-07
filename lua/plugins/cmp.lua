@@ -79,6 +79,16 @@ function M.config()
   }
 
   cmp.setup {
+    sorting = {
+		comparators = {
+			cmp.config.compare.offset,
+			cmp.config.compare.exact,
+			cmp.config.compare.score,
+			cmp.config.compare.recently_used,
+			-- require("cmp-under-comparator").under,
+			cmp.config.compare.kind,
+		},
+	},
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body) -- For `luasnip` users.
@@ -142,11 +152,12 @@ function M.config()
       end,
     },
     sources = {
-      { name = "nvim_lsp" },
+      { name = "path" },
+      { name = "nvim_lsp", keyword_length = 2 },
+      { name = "nvim-lsp-signature-help", keyword_length = 2 },
       { name = "nvim_lua" },
       { name = "luasnip" },
       { name = "buffer" },
-      { name = "path" },
     },
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,

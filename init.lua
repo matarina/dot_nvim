@@ -22,6 +22,7 @@ require('lazy').setup("plugins")
 --General settings
 ------------------
 vim.opt.number = true
+vim.opt.shiftwidth = 4 
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.cursorline = true
 vim.opt.ignorecase = true 
@@ -32,6 +33,17 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
 
+-- hide tmux status bar when enter nvim
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        vim.fn.jobstart("tmux set status off")
+    end
+})
+vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+        vim.fn.jobstart("tmux set status on")
+    end
+})
 
 
 
@@ -82,12 +94,18 @@ end)
 --lspconfig---------
 --------------------
 require'lspconfig'.pyright.setup{
+  -- capabilities = capabilities,
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  handlers = {
+    ["textDocument/publishDiagnostics"] = function() end,
+  },
+}
+require'lspconfig'.r_language_server.setup{
   capabilities = capabilities,
   handlers = {
     ["textDocument/publishDiagnostics"] = function() end,
   },
 }
-require'lspconfig'.r_language_server.setup{}
 
 --------------------
 --Color theme------
